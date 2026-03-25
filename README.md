@@ -26,12 +26,6 @@
   <img alt="Workflow" src="https://img.shields.io/badge/Workflow-Reproducible-334155">
 </p>
 
-## Home
-
-This repository keeps the full source code and uses **computer science journals** as the worked example, from journal-list preparation to final ranking export.
-
-当前仓库完整保留了源码，并以**计算机科学期刊**为完整示例，展示从期刊名单准备到最终排名导出的全流程。
-
 <a id="english"></a>
 
 <details open>
@@ -40,6 +34,8 @@ This repository keeps the full source code and uses **computer science journals*
 ## Overview
 
 **OpenSCIRanking** is an open repository for ranking journals with a transparent, data-driven workflow rather than top-down expert partitioning.
+
+This repository keeps the full source code, while **computer science journals** are included only as a worked example subset for demonstrating the end-to-end pipeline.
 
 ## Why This Repo
 
@@ -296,6 +292,8 @@ This repository keeps the upstream [LICENSE](LICENSE) file already present in th
 ## 项目简介
 
 **OpenSCIRanking** 是一个面向开源使用的期刊排序项目模板，目标是用透明、可追溯、数据驱动的方法替代传统“自上而下拍脑袋”的期刊分区逻辑。
+
+当前仓库完整保留了源码，而**计算机科学期刊**只是本项目当前附带的一个示例子集，用来演示从期刊名单准备到最终排名导出的完整流程。
 
 ## 为什么做这个仓库
 
