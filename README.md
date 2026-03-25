@@ -48,6 +48,16 @@ This repository keeps the full source code and uses **computer science journals*
 - Transparent scoring: the method is inspectable, tunable, and easy to audit.
 - GitHub-friendly layout: code is versioned, while local data products are excluded.
 
+### Pain Points in Traditional Ranking Systems
+
+Many mainstream journal evaluation systems, including impact-factor-centric rankings and expert-driven partition schemes, still rely on top-down rules or simple arithmetic aggregates. In practice, that creates several structural weaknesses:
+
+- Vulnerable to manipulation: metrics such as average citations per paper can be gamed through journal self-citation, editorial pressure to cite the host journal, citation cartels, or aggressive review-heavy publishing strategies.
+- Opaque and centralized: many classification systems are effectively black boxes. The rules are difficult to inspect, update cycles are slow, and emerging interdisciplinary venues are often misrepresented.
+- Hard to audit or customize: commercial data pipelines and proprietary scoring logic prevent ordinary researchers from reproducing the rankings or rebuilding them for a narrower subfield such as computer networks, AI, or security.
+
+OpenSCIRanking exists to address those weaknesses with an auditable, open workflow. The core idea is simple: expose the data pipeline, expose the graph construction logic, expose the ranking rules, and let the community inspect the full chain from raw metadata to final scores.
+
 ## Method Snapshot
 
 The default worked-example recipe in this repository is:
@@ -58,6 +68,80 @@ The default worked-example recipe in this repository is:
 - apply `sqrt_norm` to reduce volume bias
 - apply a mega-journal penalty to suppress extremely large venues
 - apply a mild review-heavy penalty based on average references per paper
+
+### Method and Rationale
+
+This project is not just a PageRank wrapper. It is a de-biasing pipeline designed to counter common ranking distortions.
+
+#### 1. Build an inter-journal citation graph from OpenAlex works
+
+Mechanism:
+
+- start from article-level metadata and paper-to-paper citations
+- aggregate them into a directed, weighted journal-to-journal graph
+
+Purpose:
+
+- move away from isolated scalar indicators
+- evaluate journals by their position inside the full citation network and by the direction of knowledge flow across the field
+
+#### 2. Drop journal self-citations
+
+Mechanism:
+
+- remove edges whose source journal and target journal are the same
+
+Purpose:
+
+- directly block one of the simplest ranking manipulation tactics
+- prevent editorial self-citation pressure from inflating journal prestige
+
+#### 3. Compute base PageRank
+
+Mechanism:
+
+- run PageRank on the de-self-cited directed graph
+
+Purpose:
+
+- distinguish citation quality from raw citation count
+- give more weight to citations coming from already influential journals
+- weaken the value of low-quality mutual-support structures
+
+#### 4. Apply `sqrt_norm` to reduce volume bias
+
+Mechanism:
+
+- divide the base PageRank score by the square root of the journal's publication volume
+
+Purpose:
+
+- avoid a leaderboard dominated by sheer scale
+- avoid the opposite extreme where tiny journals with a few outlier papers become unrealistically over-rewarded
+- keep a middle ground between total prestige and per-paper efficiency
+
+#### 5. Apply a mega-journal penalty
+
+Mechanism:
+
+- apply an additional penalty to journals above a configurable output-volume threshold such as `12,000` papers
+
+Purpose:
+
+- suppress rank inflation caused by extreme publication volume alone
+- reduce the structural advantage of ultra-large open-access venues and paper-factory-like publication models
+
+#### 6. Apply a mild review-heavy penalty
+
+Mechanism:
+
+- use average references per paper as a proxy for review-heavy behavior
+- mildly downweight journals whose papers are unusually reference-dense
+
+Purpose:
+
+- reduce the systematic advantage of survey and review venues over ordinary research journals
+- make the ranking better reflect how active researchers perceive standard research outlets such as transactions and regular journals
 
 ## Repository Structure
 
@@ -220,6 +304,16 @@ This repository keeps the upstream [LICENSE](LICENSE) file already present in th
 - 可解释：评分逻辑清晰，可审查、可调参
 - 适合开源：代码入库，数据产物和本地工作簿不入库
 
+### 传统评价体系的核心痛点
+
+当前主流的期刊评价体系，无论是偏向影响因子的商业榜单，还是偏向专家划分的各类分区体系，本质上都仍然依赖“自上而下”的规则制定或简单的算术统计。在真实使用场景中，这会暴露出几个非常明显的问题：
+
+- 容易被恶意操纵：如果指标过度依赖篇均被引、总被引或若干简单平均数，就会很容易被非学术行为绑架，例如强制作者引用本刊、堆高自引率、形成互引联盟，或者通过大量综述型文章抬高整体表现。
+- 中心化与黑盒化：很多分区或排行榜的更新逻辑并不透明，规则带有明显主观性，而且对新兴交叉领域的响应速度很慢，难以及时反映学科结构变化。
+- 缺乏开源审计能力：数据和算法长期被少数商业机构或封闭系统掌握，普通研究者很难复现其计算过程，更难针对某个具体子领域做定制化剥离和重排。
+
+OpenSCIRanking 就是为了解决这些问题而设计的。它的核心理念不是“给出一个新的黑盒榜单”，而是把数据获取、图构建、评分逻辑和后处理规则全部公开出来，让整个评价链条可以被复查、复现和修改。
+
 ## 方法概览
 
 当前仓库示例使用的默认方案是：
@@ -230,6 +324,80 @@ This repository keeps the upstream [LICENSE](LICENSE) file already present in th
 - 用 `sqrt_norm` 抑制超大体量期刊的体积优势
 - 加入巨型刊惩罚项
 - 对综述较重、参考文献极长的期刊加入较轻惩罚
+
+### 核心排序方法与反制逻辑
+
+本项目不是简单地统计引用量，也不是只把 `PageRank` 套到期刊名单上。它更接近一套针对常见刷榜路径的去偏引擎，每一步都对应一个明确的结构性目的。
+
+#### 1. 从 OpenAlex 构建期刊间引文图谱
+
+机制：
+
+- 从底层论文元数据出发，收集论文到论文的引用关系
+- 再把这些关系聚合成“期刊到期刊”的有向加权图
+
+目的：
+
+- 摆脱孤立的统计数字
+- 用整个学科网络的拓扑结构来判断一本期刊在知识传播中的真实位置
+
+#### 2. 剔除期刊自引
+
+机制：
+
+- 删除起点和终点属于同一期刊的边
+
+目的：
+
+- 直接切断最常见、最廉价的操纵方式
+- 防止编辑部暗示作者自引或通过流程性安排抬高本刊得分
+
+#### 3. 计算基础 PageRank
+
+机制：
+
+- 在去自引后的有向图上运行 `PageRank`
+
+目的：
+
+- 不再把所有引用视为等价投票
+- 引入“被谁引用”比“被引多少次”更重要的质量概念
+- 从算法层面削弱低质量期刊之间互相输血的价值
+
+#### 4. 应用平方根归一化
+
+机制：
+
+- 用期刊基础分数除以其发文量的平方根
+
+目的：
+
+- 防止超大发文量期刊靠体积碾压榜单
+- 同时避免简单篇均化把超小体量期刊抬得过高
+- 在“总量优势”和“篇均效率”之间取一个更稳的数学折中
+
+#### 5. 巨型期刊惩罚
+
+机制：
+
+- 对发文量超过阈值的期刊施加额外惩罚，默认示例中使用 `12,000` 作为量级参考
+
+目的：
+
+- 抑制纯体积效应造成的排名泡沫
+- 对超大型开源期刊、海量发文模式或接近“论文工厂”式的结构优势进行额外约束
+
+#### 6. 综述型期刊温和惩罚
+
+机制：
+
+- 用篇均参考文献数作为综述密度的近似代理
+- 对参考文献异常密集的期刊进行温和降权
+
+目的：
+
+- 适度削弱综述类期刊天然更容易吸引引用的优势
+- 让榜单在综述刊与常规原创研究期刊之间取得更接近一线研究者体感的平衡
 
 ## 仓库结构
 
