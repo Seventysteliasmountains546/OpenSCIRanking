@@ -14,9 +14,9 @@
 <h1 align="center">OpenSCIRanking</h1>
 
 <p align="center">
-  A reproducible, bottom-up journal ranking pipeline built on top of OpenAlex.
+  A reproducible, bottom-up journal tiering framework built on top of OpenAlex.
   <br />
-  一个基于 OpenAlex 的可复现、自下而上的期刊排序流水线。
+  一个基于 OpenAlex 的可复现、自下而上的期刊分级框架。
 </p>
 
 <p align="center">
