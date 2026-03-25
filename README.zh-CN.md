@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/banner.png" alt="OpenSCIRanking banner" width="100%" />
+  <img src="assets/banner.png" alt="OpenSCIRanking banner" width="50%" />
 </p>
 
 <h1 align="center">OpenSCIRanking</h1>
